@@ -31,7 +31,7 @@ for i in range(steps):
         q.append(np.append(point, 1))
     myPoints = points(pos=q, color=(1 - i / steps, 0 + i / steps, 0))
     rate(1)
-    robot.move(2)
+    robot.forward(2)
     robot.rotate(np.pi / 4)
 finishTime = time.time()
 print(finishTime - startTime)
