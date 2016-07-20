@@ -46,6 +46,7 @@ class Circle(Shape):
 class Transformation(Shape):
 
     def __init__(self,M,thing):
+        self.M = M
         self.Mi = np.linalg.inv(self.M)
         self.thing = thing
 

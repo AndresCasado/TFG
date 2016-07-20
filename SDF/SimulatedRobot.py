@@ -10,6 +10,9 @@ class SimulatedRobot:
         self.error = error
         self.__updateMatrix()
 
+    def copy(self):
+        return SimulatedRobot(self.p, self.theta, self.error)
+
     def drawRobot(self):
         from visual import box, arrow
         box(pos=self.p, color=(0, 1, 0))
