@@ -2,7 +2,7 @@ import numpy
 
 
 P = numpy.array((1,2))
-Q = numpy.array((150,-540))
+Q = numpy.array((150,-900))
 
 def T(traslation):
     return P+traslation
