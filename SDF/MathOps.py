@@ -13,5 +13,5 @@ def gaussian(mu, sigma, x):
     # calculates the probability of x for 1-dim Gaussian with mean mu and var. sigma
     return np.exp(- ((mu - x) ** 2) / (2 * sigma ** 2)) / np.sqrt(2.0 * np.pi * (sigma ** 2))
 
-if __name__=="__main__":
-    print gaussian(20,2,20)
+def vectorOfDirection(theta):
+    return np.array([np.sin(theta), np.cos(theta)])

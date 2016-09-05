@@ -8,10 +8,10 @@ def derivative(x):
 
 def gradientDescent(start,step):
     value = derivative(start)
-    while(abs(derivative(value))>0.00001):
+    while(abs(derivative(value))>0.0000000001):
         value = value - step*derivative(value)
         print(value)
     return value
 
-x = gradientDescent(2,0.001)
+x = gradientDescent(2,0.1)
 print("x es " + str(x))

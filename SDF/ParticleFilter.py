@@ -1,8 +1,9 @@
-import numpy as np
-from SimulatedRobot import *
+import random
+
 from Map import Map
 from Shape import *
-import MathOps as mo
+from SimulatedRobot import *
+from Util import MathOps as mo
 
 
 class Particle(SimulatedRobot):
@@ -10,6 +11,14 @@ class Particle(SimulatedRobot):
         SimulatedRobot.__init__(self, p, theta, error)
         self.weight = weight
 
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        return SimulatedRobot.__str__(self) + " with w: " + str(self.weight)
+
+    def undrawParticle(self):
+        self.myBox.visible = False
 
 class ParticleFilter:
     def __init__(self, sdfmap, realRobot, minX=-20, maxX=20, minY=-20, maxY=20, numOfBots=100):
@@ -25,20 +34,22 @@ class ParticleFilter:
                 self.simulatedRobots.append(Particle(np.array([x, y]), 0, self.error))
 
     def updateWeights(self):
-
         realScan = self.realRobot.scan(self.sdfmap)
 
         correction = mo.gaussian(0, self.error, 0)
         for particle in self.simulatedRobots:
             simulatedScan = particle.scan(self.sdfmap)
-            prob = 1
+            probM = 1
+            probD = 1
             for i in range(len(realScan)):
                 real = realScan[i]
                 simulated = simulatedScan[i]
                 a = mo.gaussian(real, self.error, simulated) / correction
-                prob *= a
-            particle.weight = prob
-        self.simulatedRobots.sort(key=lambda b: b.weight)
+                a = np.exp(-np.abs(real-simulated))
+                probM *= a
+                probD /= a
+            particle.weight = np.log(probM)
+        self.simulatedRobots.sort(key=lambda b: b.weight, reverse=True)
 
     def resample(self):
         weights = map(lambda a: a.weight, self.simulatedRobots)
@@ -77,6 +88,7 @@ class ParticleFilter:
         self.updateWeights()
         self.resample()
 
+
 if __name__ == "__main__":
     c = Circle(radius=3)
     s = Square(size=5)
@@ -84,11 +96,10 @@ if __name__ == "__main__":
     m = Map()
     m.add(c)
 
-    robot = SimulatedRobot(np.array([6, 6]), 0, error=0.3)
+    robot = SimulatedRobot(np.array([6, 6]), 0, error=2)
 
-    pf = ParticleFilter(m, robot, minX=4, maxX=8, minY=4, maxY=8, numOfBots=4 ** 2)
-
-    for i in range(50):
+    pf = ParticleFilter(m, robot, minX=4, maxX=8, minY=4, maxY=8, numOfBots=5 ** 2)
+    for i in range(40):
         print "Iteracion " + str(i)
         pf.oneIteration(distance=2)
         print "Robot en " + str(pf.realRobot)

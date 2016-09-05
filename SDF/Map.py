@@ -51,23 +51,3 @@ class Map:
                 theBox = box(pos=point, color=color)
                 theBox.size = (0.4, 0.4, 0.4)
                 theBox.z -= np.abs(d)
-
-
-if __name__ == "__main__":
-    m = Map()
-
-    import Shape
-
-    s = Shape.Square(3, 3)
-    c = Shape.Circle(2, -4, -3)
-    m.add(s)
-    m.add(c)
-    m.drawMap(20, 20)
-
-    from SimulatedRobot import SimulatedRobot
-
-    r = SimulatedRobot(np.array([0, -4]), 0)
-
-    points = r.scanPoints(m, 1000, False)
-
-    print(points)

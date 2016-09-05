@@ -8,24 +8,25 @@ from visual import *
 from Map import *
 
 m = Map()
-c = Circle(5)
+c = Circle(3)
 s = Square(np.array([2, 2]))
-j = Join(c, s, softExponentialUnion(30))
-m.add(c)
+s = Transformation(mo.get2DTransformationMatrix(3,0,np.pi/3),s)
+j = Join(c, s, softExponentialUnion(10))
+m.add(j)
 
 m.drawMap(40, 40)
 
-steps = 1
+steps = 10
 
 import time
 
 startTime = time.time()
 robot = SimulatedRobot(np.array([np.random.randint(-20, 20), np.random.randint(-20, 20)]), 0)
-robot = SimulatedRobot(np.array([6, 6]), 0)
+
 for i in range(steps):
     box(pos=robot.p, color=(1 - i / steps, 0 + i / steps, 0))
     arrow(pos=(robot.p[0], robot.p[1], 1), axis=(np.cos(robot.theta), np.sin(robot.theta), 0))
-    p = robot.scan(m, relative=False, cost=0, scanPoints=True)
+    p = robot.scan(m, relative=False, cost=0.3, scanPoints=True)
     q = []
     for point in p:
         q.append(np.append(point, 1))
