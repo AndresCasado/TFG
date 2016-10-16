@@ -4,16 +4,16 @@ import numpy as np
 
 import MathOps as mo
 
+from pySophus import *
+
 
 class SimulatedRobot:
-    def __init__(self, p, theta, error=0):
-        self.p = p
-        self.theta = theta
+    def __init__(self, algebra, error=0):
+        self.algebra = algebra
         self.error = error
-        self.__updateMatrix()
 
     def copy(self):
-        return SimulatedRobot(self.p, self.theta, self.error)
+        return SimulatedRobot(self.algebra, self.error)
 
     def drawRobot(self):
         from visual import box, arrow
@@ -24,17 +24,14 @@ class SimulatedRobot:
         self.box.visible = False
         self.arrow.visible = False
 
-    def __updateMatrix(self):
-        self.M = mo.get2DTransformationMatrix(self.p[0], self.p[1], self.theta)
-
     def forward(self, distance):
         v = mo.vectorOfDirection(self.theta)
         self.p = self.p + distance * v
-        self.__updateMatrix()
 
     def rotate(self, alpha):
         self.theta += alpha
-        self.__updateMatrix()
+
+
 
     def scan(self, sdfmap, steps=180, relative=True, cost=0.0001, scanPoints=False):
         result = []
