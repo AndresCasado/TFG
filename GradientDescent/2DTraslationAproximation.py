@@ -1,30 +1,33 @@
 import numpy
+from Solver import *
+
+P = numpy.array((1, 2))
+Q = numpy.array((150, -900))
 
 
-P = numpy.array((1,2))
-Q = numpy.array((150,-900))
-
-def T(traslation):
-    return P+traslation
-
-def dT(traslation):
-    return numpy.array((1,1))
-
-def E(traslation):
-    return numpy.linalg.norm(T(traslation) - Q)
-
-def dE(traslation):
-    dif = T(traslation) - Q
-    norm = E(traslation)
-    return numpy.array([dif[0], dif[1]])
-
-def minimumByGradientDescent(start, step, precission):
-    traslation = dE(start)
-    while(E(traslation)>precission):
-        traslation = traslation - step*dE(traslation)
-        print("traslation es" + str(traslation) + " y la derivada es " + str(dE(traslation)))
-    return traslation
+def T(P, args):
+    return P + args
 
 
-result = minimumByGradientDescent(numpy.array((0,0)), 0.1, 0.0000000001)
-print(result)
+def E(P, Q):
+    def function(args):
+        return numpy.linalg.norm(T(P, args) - Q)
+
+    return function
+
+
+def dE(P, Q):
+    def function(args):
+        dif = T(P, args) - Q
+        return dif
+
+    return function
+
+
+args = np.array([0, 0])
+gradientDescent = GradientDescent(args=args, dF=dE(P, Q), k=0.1)
+gaussNewton = GaussNewton(J=dE(P, Q), args=args)
+result = gradientDescent.solve()
+print("Gradient:" + str(result))
+result = gaussNewton.solve()
+print("GaussNewton:" + str(result))
