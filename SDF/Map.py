@@ -26,6 +26,7 @@ class Map:
     def rayMarching(self, p, v, minimum=0.0001):
         t = 0
         maxDistance = 1000
+        v = v / np.linalg.norm(v)
         for i in range(1000):
             newP = p + v * t
             d = self.SDF(newP)

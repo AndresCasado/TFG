@@ -1,6 +1,7 @@
 from __future__ import division
 
 import numpy as np
+import MathOps as mo
 
 
 class Shape:
@@ -50,14 +51,12 @@ class Circle(Shape):
 
 class Transformation(Shape):
     def __init__(self, M, thing):
-        self.M = M
-        self.Mi = np.linalg.inv(self.M)
+        self.Mi = np.linalg.inv(M)
         self.thing = thing
 
     def distance(self, p):
-        point = np.append(p, 1)
-        point = np.dot(self.Mi, point)
-        return self.thing.distance(np.delete(point, len(point) - 1))
+        point = mo.exDot(self.Mi, p)
+        return self.thing.distance(point)
 
 
 class Join(Shape):

@@ -1,6 +1,8 @@
 from __future__ import division
 import numpy as np
 
+EPSILON = 1 / np.power(10, 32)
+
 
 def union():
     def calc(x, y):
@@ -42,7 +44,7 @@ def difference():
 
 
 def softExponentialDifference(r=5):
-    assert not r == 0
+    assert not r < EPSILON
 
     def calc(x, y):
         res = np.exp(r * x) + np.exp(-r * y)
