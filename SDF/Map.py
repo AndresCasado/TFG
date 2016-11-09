@@ -1,46 +1,51 @@
 import numpy as np
-
-maxDist = 10000
+import MathOps as mo
 
 
 class Map:
-    def __init__(self):
+    def __init__(self, maxDist=1000, maxIterations=1000, epsilon=0.0001):
         self.things = []
+        self.maxDist = maxDist
+        self.maxIterations = maxIterations
+        self.epsilon = epsilon
 
     def add(self, thing):
         self.things.append(thing)
 
     def SDF(self, p):
-        dist = maxDist
+        dist = self.maxDist
         for thing in self.things:
             dist = min(dist, thing.distance(p))
         return dist
 
-    def JSDF(self, p, delta=0.0001):
-        ex = np.array([delta, 0])
-        ey = np.array([0, delta])
-        dx = (self.SDF(p) - self.SDF(p - ex)) / delta
-        dy = (self.SDF(p) - self.SDF(p - ey)) / delta
-        return np.array([dx, dy])
+    def JSDF(self, p, delta=0.000001):
+        #TODO FIX NUMERIC PROBLEM
+        result = np.zeros_like(p,dtype=float)
+        for i in range(len(result)):
+            zeros = np.zeros_like(result,dtype=float)
+            zeros[i] = delta
+            pointV = np.array(p) - zeros
+            result[i] = (self.SDF(p) - self.SDF(pointV)) / delta
+        return result
 
-    def rayMarching(self, p, v, minimum=0.0001):
+    def rayMarching(self, p, v, border=0.0001):
         t = 0
-        maxDistance = 1000
-        v = v / np.linalg.norm(v)
-        for i in range(1000):
+        v = mo.normalize(v)
+        d = self.SDF(p)
+        for i in range(self.maxIterations):
             newP = p + v * t
             d = self.SDF(newP)
-            if (d > maxDistance) or (np.absolute(d - minimum) < 0.0001):
+            if (d > self.maxDist) or (np.absolute(d - border) < self.epsilon):
                 break
-            t += d - minimum
-        if not (d > maxDistance):
+            t += d - border
+        if not (d > self.maxDist):
             return t
         else:
             raise ValueError("No point found")
 
     def drawMap(self, width, height, definition=50):
         from visual import rate, box
-        rate(1)
+        rate(60)
         for i in np.linspace(-width / 2, width / 2, num=definition):
             for j in np.linspace(-height / 2, height / 2, num=definition):
                 point = np.array([j, i])

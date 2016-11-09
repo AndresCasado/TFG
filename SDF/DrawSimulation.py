@@ -34,7 +34,7 @@ for i in range(steps):
     vx = np.array([1, 0, 0])
     robotV = robot.direction()
     arrow(pos=np.append(robot.position(), 1), axis=np.append(robotV, 0))
-    p = robot.scan(m, relative=False, cost=0.3, scanPoints=True)
+    p = robot.scan2D(m, relative=False, cost=0.3, scanPoints=True)
     q = []
     for point in p:
         q.append(np.append(point, 1))

@@ -34,7 +34,7 @@ class ParticleFilter:
                 self.simulatedRobots.append(Particle(np.array([x, y]), 0, self.error))
 
     def updateWeights(self):
-        realScan = self.realRobot.scan(self.sdfmap)
+        realScan = self.realRobot.scan2D(self.sdfmap)
 
         correction = mo.gaussian(0, self.error, 0)
         for particle in self.simulatedRobots:
