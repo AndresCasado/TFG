@@ -106,7 +106,7 @@ points(pos=list, color=colores)
 # '''
 
 args = np.array([0, 0, 0])
-gradientDescent = GenericGradientDescent(acumulador(E), args, acumulador(dE), k=0.001, precision=0.5)
+gradientDescent = GradientDescent(acumulador(E), args, acumulador(dE), k=0.001, precision=0.5)
 # result = gradientDescent.calculate()
 result = minimumByGradientDescent(args, .03, 0.1)
 print(result)
