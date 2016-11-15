@@ -1,66 +1,73 @@
 import numpy as np
-import SDF.MathOps as mo
+from pySophus import *
+from Solver import *
 
-np.array([[1,1,1],
-          [1,3,1],
-          [3,3,1],
-          [3,1,1],
-          [1,1,3],
-          [1,3,3],
-          [3,3,3],
-          [3,1,3]])
+Original = np.array([[1, 1, 1],
+                     [1, 3, 1],
+                     [3, 3, 1],
+                     [3, 1, 1],
+                     [1, 1, 3],
+                     [1, 3, 3],
+                     [3, 3, 3],
+                     [3, 1, 3],
+                     [0, 0, 0],
+                     [0.2, 1.5, 3.6],
+                     [1.4, 2.67, 1.69],
+                     [2.4, 2.35, 3.056]])
 
-
-Original = [A, B, C, D]
-Changed = [AA, BB, CC, DD]
-
-
-def T(P, theta, tx, ty):
-    result = np.dot(mo.get2DTransformationMatrix(tx, ty, theta), np.array([P[0], P[1], 1]))
-    return np.array([result[0], result[1]])
-
-
-def dT(P, theta, tx, ty):
-    return np.array([[-P[0] * np.sin(theta) - P[1] * np.cos(theta), 1, 0],
-                     [P[0] * np.cos(theta) + P[0] * np.sin(theta), 0, 1]])
+tfAlgebra = se3(vector=np.array([0.3, 0.0, 0.0, 0.0, 0.0, 0.0]))
+tfGroup = tfAlgebra.exp()
+Changed = tfGroup * Original
 
 
-def E(P, Q, theta, tx, ty):
-    return np.linalg.norm(T(P, theta, tx, ty) - Q)
+def T(P, vector):
+    algebra = se3(vector=vector)
+    return algebra.exp() * P
 
 
-def dE(P, Q, theta, tx, ty):
-    dif = T(P, theta, tx, ty) - Q
-    norm = E(P, Q, theta, tx, ty)
-    derivadaTheta = np.array([[-np.sin(theta), np.cos(theta)],
-                              [np.cos(theta), -np.sin(theta)]])
-    dAlpha = np.dot(dif, np.dot(derivadaTheta, P))
-    dTx = dif[0] / norm
-    dTy = dif[1] / norm
-    return np.array((dAlpha, dTx, dTy))
+def JT(P, vector):
+    Q = T(P, vector)
+    algebra = se3(vector=vector)
+    g = algebra.generators()
+    j = np.array([[], [], []])
+    for a in g:
+        p = specialDotMatrix(a, Q)
+        p = np.reshape(p, (len(Q), 1))
+        j = np.concatenate((j, p), axis=1)
+    return j
 
 
-def minimumByGradientDescent(start, step, precission):
-    keepDoing = True
-    params = start
-    try:
-        while (keepDoing):
-            dETotal = np.array((0, 0, 0))
-            for i in range(len(Original)):
-                dETotal = dETotal + dE(Original[i], Changed[i], params[0], params[1], params[2])
-            params = params - step * dETotal
-            print(params)
-            keepDoing = np.linalg.norm(dETotal) > precission
-    except ValueError:
-        print("error " + str(keepDoing))
-    return np.array(params)
+def E():
+    def function(algebra):
+        j = np.array([0.0, 0.0, 0.0])
+        for i in range(len(Original)):
+            diff = T(Original[i], algebra) - Changed[i]
+            j = j + diff
+        return j
+
+    return function
 
 
-result = minimumByGradientDescent(np.array((0, 0, 0)), .001, 0.0000001)
+def JE():
+    def function(algebra):
+        j = np.zeros((3, 6))
+        for i in range(len(Original)):
+            j = j + JT(Original[i], algebra)
+        return j
+
+    return function
+
+
+point = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+gn = GaussNewton(f=E(), J=JE(), args=point, precision=0.0000000, maxSteps=4000)
+result = gn.solve()
 print(result)
-
-
-print("lets see if everything is ok")
-for p in Original:
-    test = np.dot(mo.get2DTransformationMatrix(result[1],result[2],result[0]),np.array([p[0],p[1],1]))
-    print(test)
+print("Let's test")
+resultM = se3(vector=result).exp().matrix()
+realM = tfAlgebra.exp().matrix()
+print(resultM - realM)
+print("A ver los puntos")
+resultC = se3(vector=result).exp() * Original
+print(Changed)
+print(resultC)
+print(Changed-resultC)
