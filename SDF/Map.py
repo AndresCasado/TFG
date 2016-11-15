@@ -19,10 +19,10 @@ class Map:
         return dist
 
     def JSDF(self, p, delta=0.000001):
-        #TODO FIX NUMERIC PROBLEM
-        result = np.zeros_like(p,dtype=float)
+        # TODO FIX NUMERIC PROBLEM
+        result = np.zeros_like(p, dtype=float)
         for i in range(len(result)):
-            zeros = np.zeros_like(result,dtype=float)
+            zeros = np.zeros_like(result, dtype=float)
             zeros[i] = delta
             pointV = np.array(p) - zeros
             result[i] = (self.SDF(p) - self.SDF(pointV)) / delta
