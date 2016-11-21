@@ -2,18 +2,32 @@ import numpy as np
 from pySophus import *
 from Solver import *
 
-Original = np.random.randint(low=-5000, high=5000, size=(50000, 3))
+# Random points creation
+limit = 20
+numberofpoints = 50
+Original = np.random.randint(low=-limit, high=limit, size=(numberofpoints, 3))
 
-tfAlgebra = se3(vector=np.array([1.6, -1.6, 6, -5.0, 1.0, -3.0]))
+# Transformation creation
+tfAlgebra = se3(vector=np.array([0.3, -0.6, 0.75, -5.0, 1.0, 0.0]))
+
+# Transform points
 tfGroup = tfAlgebra.exp()
 Changed = tfGroup * Original
 
+# Adding random error
+mean = 0.0
+error = 0.1
+Original = Original + np.random.normal(loc=mean, scale=error, size=Original.shape)
+Changed = Changed + np.random.normal(loc=mean, scale=error, size=Changed.shape)
 
+
+# Point transformation function
 def T(P, vector):
     algebra = se3(vector=vector)
     return algebra.exp() * P
 
 
+# Jacobian matrix of point transformation function
 def JT(P, vector):
     Q = T(P, vector)
     j = np.zeros((3, 6))
@@ -23,6 +37,7 @@ def JT(P, vector):
     return j
 
 
+# Objective function creation function (calling this function returns the objective function)
 def r():
     def function(vector):
         m = len(Original)
@@ -36,10 +51,11 @@ def r():
     return function
 
 
+# Jacobian of objective function creation function (calling this function returns the jacobian of objective function)
 def Jr():
     def function(vector):
         m = len(Original)
-        jvalue = np.zeros((m,6))
+        jvalue = np.zeros((m, 6))
         for i in range(m):
             P = Original[i]
             Q = Changed[i]
@@ -51,16 +67,7 @@ def Jr():
     return function
 
 
-point = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
-gn = GaussNewton(f=r(), J=Jr(), args=point, precision=1e-32, maxSteps=4000, k=0.001)
+startingvalue = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+gn = GaussNewton(f=r(), J=Jr(), args=startingvalue, precision=1e-10, maxSteps=20, k=1e-32)
 result = gn.solve()
 print(result)
-print("Let's test")
-resultM = se3(vector=result).exp().matrix()
-realM = tfAlgebra.exp().matrix()
-print(resultM - realM)
-print("A ver los puntos")
-resultC = se3(vector=result).exp() * Original
-print(Changed)
-print(resultC)
-print(Changed - resultC)
