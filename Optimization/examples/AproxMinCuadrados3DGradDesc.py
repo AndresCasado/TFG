@@ -1,6 +1,6 @@
 import numpy as np
 from pySophus import *
-from Solver import *
+from Optimization.Solver import *
 
 Original = np.random.randint(low=-50, high=50, size=(20, 3))
 
@@ -48,7 +48,7 @@ def gE():
 
 
 point = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
-gn = GradientDescent(dF=gE(), args=point, precision=0.0000001, maxSteps=4000**2, k = 0.00005)
+gn = GradientDescent(dF=gE(), args=point, precision=0.0000001, maxSteps=4000**2, k = 0.001)
 result = gn.solve()
 print("result:", result)
 matrix=se3(vector=result).exp().matrix()

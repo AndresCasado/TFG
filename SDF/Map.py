@@ -3,7 +3,7 @@ import MathOps as mo
 
 
 class Map:
-    def __init__(self, maxDist=1000, maxIterations=1000, epsilon=0.0001):
+    def __init__(self, maxDist=100, maxIterations=1000, epsilon=1e-10):
         self.things = []
         self.maxDist = maxDist
         self.maxIterations = maxIterations
@@ -18,7 +18,7 @@ class Map:
             dist = min(dist, thing.distance(p))
         return dist
 
-    def JSDF(self, p, delta=0.000001):
+    def JSDF(self, p, delta=1e-10):
         # TODO FIX NUMERIC PROBLEM
         result = np.zeros_like(p, dtype=float)
         for i in range(len(result)):
@@ -45,8 +45,8 @@ class Map:
 
     def drawMap(self, width, height, definition=50):
         from visual import rate, box
-        rate(60)
         for i in np.linspace(-width / 2, width / 2, num=definition):
+            rate(60)
             for j in np.linspace(-height / 2, height / 2, num=definition):
                 point = np.array([j, i])
                 d = self.SDF(point)

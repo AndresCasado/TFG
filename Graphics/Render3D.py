@@ -1,5 +1,5 @@
-from Shape import *
-from Map import Map
+from SDF.Shape import *
+from SDF.Map import Map
 from visual import *
 import numpy as np
 from pySophus import *

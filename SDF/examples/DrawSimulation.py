@@ -1,25 +1,21 @@
 from __future__ import division, print_function
 
-from JoinFunctions import *
-from Shape import *
-from SimulatedRobot import *
-from Map import *
-import MathOps as mo
-
-from visual import *
-from pySophus import *
+from Robots.SimulatedRobot import *
+from SDF.JoinFunctions import *
+from SDF.Map import *
+from SDF.Shape import *
 
 m = Map()
 c = Circle(3)
-s = Square(np.array([3,3]))
+s = Square(np.array([3, 3]))
 
 tfMatrix = se2(vector=np.array([np.pi / 4, 10, 0])).exp().matrix()
 s = Transformation(tfMatrix, s)
 
-j = Join(c, s, softExponentialUnion(32.0))
+j = Join(c, s, softPolynomialUnion(3.0))
 m.add(j)
 
-m.drawMap(40, 40)
+m.drawMap(20, 20)
 
 steps = 10
 
@@ -29,7 +25,10 @@ startTime = time.time()
 robotM = se2(vector=np.array([0, 0, 0])).exp().matrix()
 robot = SimulatedRobot(robotM, 0)
 
+from visual import *
+
 for i in range(steps):
+    rate(60)
     box(pos=robot.position(), color=(1 - i / steps, 0 + i / steps, 0))
     vx = np.array([1, 0, 0])
     robotV = robot.direction()
@@ -39,7 +38,6 @@ for i in range(steps):
     for point in p:
         q.append(np.append(point, 1))
     myPoints = points(pos=q, color=(1 - i / steps, 0 + i / steps, 0))
-    rate(1)
     robot.forward(2)
     robot.rotate(np.pi / 4)
 finishTime = time.time()

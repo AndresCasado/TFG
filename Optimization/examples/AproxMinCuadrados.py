@@ -1,6 +1,6 @@
 import numpy as np
 import SDF.MathOps as mo
-from Solver import *
+from Optimization.Solver import *
 
 Original = np.array([[1, 1],
                      [1, 2],

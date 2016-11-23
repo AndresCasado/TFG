@@ -1,10 +1,10 @@
 import numpy as np
 from pySophus import *
-from Solver import *
+from Optimization.Solver import *
 
 # Random points creation
-limit = 20
-numberofpoints = 50
+limit = 5000
+numberofpoints = 5000
 Original = np.random.randint(low=-limit, high=limit, size=(numberofpoints, 3))
 
 # Transformation creation
@@ -68,6 +68,6 @@ def Jr():
 
 
 startingvalue = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
-gn = GaussNewton(f=r(), J=Jr(), args=startingvalue, precision=1e-10, maxSteps=20, k=1e-32)
+gn = GaussNewton(f=r(), J=Jr(), args=startingvalue, precision=1e-10, maxSteps=2000, k=0.7)
 result = gn.solve()
 print(result)

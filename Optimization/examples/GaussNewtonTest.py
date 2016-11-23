@@ -1,4 +1,4 @@
-from Solver import GaussNewton
+from Optimization.Solver import GaussNewton
 import numpy as np
 
 

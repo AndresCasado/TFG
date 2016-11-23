@@ -1,5 +1,5 @@
 import numpy
-from Solver import *
+from Optimization.Solver import *
 
 P = numpy.array((1, 2))
 Q = numpy.array((150563.456, -9950.5))

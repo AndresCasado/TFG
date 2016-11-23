@@ -1,9 +1,8 @@
-import random
-
-from Map import Map
-from Shape import *
-from SimulatedRobot import *
 from Util import MathOps as mo
+
+from Robots.SimulatedRobot import *
+from SDF.Map import Map
+from SDF.Shape import *
 
 
 class Particle(SimulatedRobot):

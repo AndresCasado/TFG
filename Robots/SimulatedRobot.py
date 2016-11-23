@@ -2,7 +2,7 @@ import random
 
 import numpy as np
 
-import MathOps as mo
+import SDF.MathOps as mo
 
 from pySophus import *
 

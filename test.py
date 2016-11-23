@@ -29,7 +29,7 @@ def dibujo():
 
 
 def optimizacion():
-    import GradientDescent.Solver as solver
+    import Optimization.Solver as solver
     originalPoints = np.array([[0, 0], [0, 2], [2, 2], [2, 0]])
     algebra = se2(vector=np.array([np.pi/6,1,0.3]))
     group = algebra.exp()
@@ -37,7 +37,7 @@ def optimizacion():
     changedPoints = mo.exDot(mat,originalPoints)
     def gradE(algebra):
         pass
-    #gradientDescent = solver.GradientDescent(Df,args)
+    #gradientDescent = solver.Optimization(Df,args)
 
 def test():
     x = np.linspace(-10,10,6)/3.0

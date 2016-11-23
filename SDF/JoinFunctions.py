@@ -1,7 +1,7 @@
 from __future__ import division
 import numpy as np
 
-EPSILON = 1 / np.power(10, 32)
+EPSILON = 1e-16
 
 
 def union():
