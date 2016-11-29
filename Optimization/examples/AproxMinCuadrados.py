@@ -12,7 +12,7 @@ transform = mo.get2DTransformationMatrix(0.2, -0.2, 0.1)
 
 Changed = np.dot(transform, np.append(Original.T, np.ones((1, len(Original))), axis=0))
 Changed = Changed[0:len(Changed) - 1, ...]
-Changed = Changed.T
+Changed = Changed.__T
 
 
 def T(P, args):

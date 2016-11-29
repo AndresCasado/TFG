@@ -41,7 +41,7 @@ def gE():
             P = Original[i]
             diff = T(P, vector) - Changed[i]
             j = JT(P, vector)
-            g = g + j.T.dot(diff).T
+            g = g + j.T.dot(diff).__T
         return g
 
     return function
