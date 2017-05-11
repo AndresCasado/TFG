@@ -12,7 +12,8 @@ def union():
 
 
 def softExponentialUnion(r=5):
-    assert not r == 0
+    if r<=EPSILON:
+        raise ArithmeticError("radius can't be 0")
 
     def calc(x, y):
         res = np.exp(-r * x) + np.exp(-r * y)
@@ -44,7 +45,8 @@ def difference():
 
 
 def softExponentialDifference(r=5):
-    assert not r < EPSILON
+    if r<=EPSILON:
+        raise ArithmeticError("radius can't be 0")
 
     def calc(x, y):
         res = np.exp(r * x) + np.exp(-r * y)
