@@ -24,8 +24,9 @@ class Map:
         for i in range(len(result)):
             zeros = np.zeros_like(result, dtype=float)
             zeros[i] = delta
-            pointV = np.array(p) - zeros
-            result[i] = (self.SDF(p) - self.SDF(pointV)) / delta
+            pointLeft = np.array(p) - zeros
+            pointRight = np.array(p) + zeros
+            result[i] = (self.SDF(pointRight) - self.SDF(pointLeft)) / delta
         return result
 
     def rayMarching(self, p, v, border=0.0001):
