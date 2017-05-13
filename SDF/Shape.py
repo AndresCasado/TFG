@@ -28,9 +28,9 @@ class OldSquare(Shape):
                           difX * np.sin(self.angle) + difY * np.cos(self.angle)) - 1
 
 
-class Square(Shape):
+class RoundBoxUnsigned(Shape):
     def __init__(self, size, r=0):
-        self.size = size
+        self.size = size / 2
         self.r = r
 
     def distance(self, p):
@@ -41,7 +41,20 @@ class Square(Shape):
         return np.linalg.norm(v) - self.r
 
 
-class Circle(Shape):
+class Box(Shape):
+    def __init__(self, size):
+        self.size = size / 2
+
+    def distance(self, p):
+        d = np.abs(p) - self.size
+        v = np.array([])
+        for i in range(len(d)):
+            v = np.append(v, max(d[i], 0))
+            distance = np.linalg.norm(v)
+            return distance if distance > 0 else np.max(d)
+
+
+class Sphere(Shape):
     def __init__(self, radius=1):
         self.radius = radius
 

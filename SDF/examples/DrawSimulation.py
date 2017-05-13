@@ -6,8 +6,8 @@ from SDF.Map import *
 from SDF.Shape import *
 
 m = Map()
-c = Circle(3)
-s = Square(np.array([3, 3]))
+c = Sphere(3)
+s = RoundBoxUnsigned(np.array([3, 3]))
 
 tfMatrix = se2(vector=np.array([np.pi / 4, 10, 0])).exp().matrix()
 s = Transformation(tfMatrix, s)

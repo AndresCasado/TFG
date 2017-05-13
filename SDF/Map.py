@@ -18,14 +18,14 @@ class Map:
             dist = min(dist, thing.distance(p))
         return dist
 
-    def JSDF(self, p, delta=1e-10):
-        # TODO FIX NUMERIC PROBLEM
+    def JSDF(self, p):
+        delta = 1e-5
         result = np.zeros_like(p, dtype=float)
         for i in range(len(result)):
-            zeros = np.zeros_like(result, dtype=float)
-            zeros[i] = delta
-            pointLeft = np.array(p) - zeros
-            pointRight = np.array(p) + zeros
+            pointRight = np.array(p)
+            pointRight[i] += delta
+            pointLeft = np.array(p)
+            pointLeft[i] -= delta
             result[i] = (self.SDF(pointRight) - self.SDF(pointLeft)) / delta
         return result
 
@@ -58,3 +58,13 @@ class Map:
                 theBox = box(pos=point, color=color)
                 theBox.size = (0.4, 0.4, 0.4)
                 theBox.z -= np.abs(d)
+
+if __name__=='__main__':
+    m = Map()
+    import Shape
+    s = Shape.Box(np.array([20., 10.]))
+    d = s.distance(np.array([2,3]))
+    print(d)
+    m.add(s)
+    jsdf = m.JSDF(np.array([2,3.]))
+    print(jsdf)

@@ -9,8 +9,8 @@ factor = 16
 frameSizeX = 16 * factor
 frameSizeY = 9 * factor
 
-s = Circle(radius=70)
-c = Square(size=np.array([1, 1, 1]) * 60)
+s = Sphere(radius=70)
+c = RoundBoxUnsigned(size=np.array([1, 1, 1]) * 60)
 firstrotation = se3(vector=np.array([0, 0, 1, 0, 0, 0]))
 secondrotation = se3(vector=np.array([0, 0, 0, 0, 0, 0]))
 sum = firstrotation + secondrotation

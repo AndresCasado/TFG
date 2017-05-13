@@ -89,11 +89,12 @@ class ParticleFilter:
 
 
 if __name__ == "__main__":
-    c = Circle(radius=3)
-    s = Square(size=5)
+    c = Sphere(radius=3)
+    s = Box(size=[5,5])
     t = Transformation(M=mo.get2DTransformationMatrix(30, -4, np.pi / 3), thing=s)
     m = Map()
     m.add(c)
+    m.add(s)
 
     robot = SimulatedRobot(np.array([6, 6]), 0, error=2)
 
